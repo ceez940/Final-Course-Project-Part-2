@@ -1,0 +1,54 @@
+---
+- name: Create AWS Minecraft server
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  vars_files:
+    - vars.yml
+
+  tasks:
+    - name: Create security group
+      amazon.aws.ec2_security_group:
+        name: "{{ security_group }}"
+        description: Minecraft server security group
+        region: "{{ region }}"
+        rules:
+          - proto: tcp
+            ports: 22
+            cidr_ip: 0.0.0.0/0
+            rule_desc: SSH
+          - proto: tcp
+            ports: "{{ minecraft_port }}"
+            cidr_ip: 0.0.0.0/0
+            rule_desc: Minecraft
+        rules_egress:
+          - proto: -1
+            cidr_ip: 0.0.0.0/0
+
+    - name: Create EC2 server
+      amazon.aws.ec2_instance:
+        name: "{{ server_name }}"
+        key_name: "{{ key_name }}"
+        instance_type: "{{ server_type }}"
+        image_id: "{{ ami }}"
+        region: "{{ region }}"
+        security_group: "{{ security_group }}"
+        wait: true
+        count: 1
+        network:
+          assign_public_ip: true
+        tags:
+          Project: Minecraft
+      register: server
+
+    - name: Save server IP to hosts.ini
+      copy:
+        dest: hosts.ini
+        content: |
+          [minecraft]
+          {{ server.instances[0].public_ip_address }} ansible_user=ec2-user ansible_ssh_private_key_file={{ key_file }} ansible_ssh_common_args='-o StrictHostKeyChecking=no'
+
+    - name: Show public IP
+      debug:
+        msg: "Minecraft server IP is {{ server.instances[0].public_ip_address }}"
