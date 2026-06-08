@@ -85,4 +85,4 @@ Expected result:
 - [AWS EC2 Documentation](https://docs.aws.amazon.com/ec2/)
 - [Minecraft Server Download](https://www.minecraft.net/en-us/download/server)
 - [OpenAI](https://openai.com/)
-- [Mincraft Setup Wiki]([https://openai.com/](https://minecraft.wiki/w/Tutorial:Setting_up_a_Java_Edition_server))
+- [Mincraft Setup Wiki](https://minecraft.wiki/w/Tutorial:Setting_up_a_Java_Edition_server)
