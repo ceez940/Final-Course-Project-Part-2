@@ -1,0 +1,75 @@
+---
+- name: Install Minecraft server
+  hosts: minecraft
+  become: true
+
+  tasks:
+    - name: Update packages
+      dnf:
+        name: "*"
+        state: latest
+
+    - name: Download Java 25 Amazon Corretto RPM
+      get_url:
+        url: https://corretto.aws/downloads/latest/amazon-corretto-25-x64-linux-jdk.rpm
+        dest: /tmp/java25.rpm
+
+    - name: Install Java 25
+      dnf:
+        name: /tmp/java25.rpm
+        state: present
+        disable_gpg_check: true
+
+    - name: Create Minecraft folder
+      file:
+        path: /home/ec2-user/minecraft
+        state: directory
+        owner: ec2-user
+        group: ec2-user
+
+    - name: Download Minecraft server
+      get_url:
+        url: https://piston-data.mojang.com/v1/objects/e6ec2f64e6080b9b5d9b471b291c33cc7f509733/server.jar
+        dest: /home/ec2-user/minecraft/minecraft_server.jar
+        owner: ec2-user
+        group: ec2-user
+        mode: '0644'
+
+    - name: Accept EULA
+      copy:
+        content: "eula=true\n"
+        dest: /home/ec2-user/minecraft/eula.txt
+        owner: ec2-user
+        group: ec2-user
+
+    - name: Create Minecraft service
+      copy:
+        dest: /etc/systemd/system/minecraft.service
+        content: |
+          [Unit]
+          Description=Minecraft Server
+          After=network.target
+
+          [Service]
+          User=ec2-user
+          WorkingDirectory=/home/ec2-user/minecraft
+          ExecStart=/usr/bin/java -Xmx1G -Xms512M -jar minecraft_server.jar nogui
+          ExecStop=/bin/kill -SIGINT $MAINPID
+          Restart=always
+
+          [Install]
+          WantedBy=multi-user.target
+
+    - name: Reload systemd
+      systemd:
+        daemon_reload: true
+
+    - name: Enable Minecraft service
+      systemd:
+        name: minecraft
+        enabled: true
+
+    - name: Start Minecraft service
+      systemd:
+        name: minecraft
+        state: restarted
