@@ -1,0 +1,8 @@
+region: us-east-1
+server_name: Minecraft-Server
+server_type: t2.medium
+key_name: MyLinuxKey
+key_file: ~/Downloads/MyLinuxKey.pem
+security_group: minecraft-security-group
+minecraft_port: 25565
+ami: ami-0bb84b8ffd87024d8
