@@ -81,8 +81,8 @@ Expected result:
 
 ## Sources
 
-- [Ansible Documentation](https://docs.ansible.com/projects/ansible/latest/index.html)
-- [AWS EC2 Documentation](https://docs.aws.amazon.com/ec2/)
-- [Minecraft Server Download](https://www.minecraft.net/en-us/download/server)
+- [Ansible Documentation](https://docs.ansible.com/projects/ansible/latest/index.html) - ansible help 
+- [AWS EC2 Documentation](https://docs.aws.amazon.com/ec2/) - aws help 
+- [Minecraft Server Download](https://www.minecraft.net/en-us/download/server) - latest download link
 - [OpenAI](https://openai.com/) - for help with terminal commands. 
-- [Mincraft Setup Wiki](https://minecraft.wiki/w/Tutorial:Setting_up_a_Java_Edition_server)
+- [Mincraft Setup Wiki](https://minecraft.wiki/w/Tutorial:Setting_up_a_Java_Edition_server) - for help on which download links are needed and configuration setting. 
